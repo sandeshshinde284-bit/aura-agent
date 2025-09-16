@@ -3,7 +3,7 @@ name = "aura-remediation-agent"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "sandesh shinde", email = "sandeshshinde265@email.com"},
+    {name = "sandesh shinde", email = "sandeshshinde284@email.com"},
 ]
 dependencies = [
     "google-adk~=1.8.0",
