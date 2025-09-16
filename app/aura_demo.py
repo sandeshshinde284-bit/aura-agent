@@ -8,6 +8,25 @@ import streamlit as st
 import time
 from datetime import datetime
 
+def add_live_features():
+    """Add real-time elements and system status"""
+    # Current timestamp
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+    st.sidebar.markdown(f"🕐 **Last Updated**: {current_time}")
+    
+    # System status
+    st.sidebar.markdown("### 🟢 System Status")
+    st.sidebar.success("✅ All systems operational")
+    st.sidebar.info("🔗 Connected: Google Cloud")
+    st.sidebar.info("🧠 AI Model: Gemini 2.5 Flash")
+    st.sidebar.info("📍 Region: us-central1")
+    
+    # Add cost calculator
+    st.sidebar.markdown("### 💰 ROI Calculator")
+    monthly_spend = st.sidebar.number_input("Monthly Cloud Spend ($)", 10000, 1000000, 50000)
+    projected_savings = monthly_spend * 0.15  # 15% savings
+    st.sidebar.success(f"Projected Savings: ${projected_savings:,.0f}/month")
+
 # Page setup
 st.set_page_config(
     page_title="Aura - Autonomous Remediation", 
@@ -16,19 +35,27 @@ st.set_page_config(
 )
 
 def main():
-    st.title("🤖 Aura - Autonomous Remediation Agent")
-    st.markdown("*Transforming reactive alerts into proactive autonomous solutions*")
+    st.markdown("""
+    <div style='text-align: center; background: linear-gradient(90deg, #4285f4, #34a853); 
+               padding: 20px; border-radius: 10px; margin-bottom: 20px; color: white;'>
+    <h1>🤖 AURA - Autonomous Remediation Agent</h1>
+    <h3>Google Agent Hackathon 2025</h3>
+    <p style='font-size: 18px;'><i>"From Alert to Resolution in Minutes, Not Hours"</i></p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Dashboard metrics
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
-        st.metric("Alerts Processed", "1,247", "+23 today")
+        st.metric("🚨 Alerts Today", "47", "+12 from yesterday")
     with col2:
-        st.metric("Issues Resolved", "1,156", "92.7% success")
+        st.metric("⚡ Avg Resolution", "2.3 min", "-67% improvement")  
     with col3:
-        st.metric("Cost Saved", "$127,450", "+$2,340 this week")
+        st.metric("💰 Cost Saved", "$23,400", "+18% this month")
     with col4:
-        st.metric("Avg Resolution", "2.3 min", "-45% faster")
+        st.metric("🎯 Success Rate", "95.3%", "+2.1% this week")
+    with col5:
+        st.metric("⏱️ Uptime", "99.97%", "SLA exceeded")
     
     st.markdown("---")
     
@@ -38,9 +65,12 @@ def main():
     
     # Alert scenarios
     alert_scenarios = {
-        "cost_anomaly": "💰 Cost Spike - VM Running Unused",
-        "security_vulnerability": "🔒 Security Breach - Open Firewall",
-        "performance_degradation": "⚡ Performance Issue - Low Memory"
+        "cost_anomaly": "💰 Cost Spike - VM Running Unused ($45/day waste)",
+        "security_vulnerability": "🔒 Security Breach - Open Firewall (Critical Risk)",
+        "performance_degradation": "⚡ Performance Issue - Memory Exhaustion (94% usage)",
+        "storage_waste": "💾 Storage Waste - Orphaned Volumes ($200/month)",
+        "network_anomaly": "🌐 Network Spike - Unusual Traffic (Security concern)",
+        "compliance_violation": "⚖️ Compliance Risk - Unencrypted Database"
     }
     
     selected_scenario = st.sidebar.selectbox(
@@ -67,6 +97,7 @@ def main():
         4. **✋ Human Approval** - Safety checkpoint
         5. **🚀 Autonomous Execution** - Automatic problem resolution
         """)
+    add_live_features()
     
     # Run demo if triggered
     if st.session_state.get('demo_running', False):
@@ -263,6 +294,15 @@ def show_execution_results(scenario):
     for detail in impact_data['details']:
         st.markdown(f"• {detail}")
     
+    st.markdown("### ⚡ Manual vs Aura Comparison")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Manual Process", "23 hours", "❌ Slow")
+    with col2:
+        st.metric("Aura Process", "2.3 minutes", "✅ Fast")  
+    with col3:
+        st.metric("Time Savings", "99.8%", "🚀 Improvement")
+
     # Timeline
     st.markdown("### ⏱️ Resolution Timeline")
     timeline = [
@@ -277,6 +317,13 @@ def show_execution_results(scenario):
     for event, time_stamp in timeline:
         st.markdown(f"**{time_stamp}** - {event}")
     
+    st.markdown("""
+        <div style='background: #e8f5e8; padding: 20px; border-radius: 10px; border-left: 5px solid #4caf50;'>
+        <h3>🎉 AUTONOMOUS REMEDIATION SUCCESSFUL!</h3>
+        <p>Aura has successfully resolved the cloud incident without human intervention.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
     # Success celebration
     st.balloons()
     
@@ -297,7 +344,8 @@ def show_execution_results(scenario):
             if key in st.session_state:
                 del st.session_state[key]
         st.rerun() 
-
+        
+    
 # Data functions
 def get_alert_info(scenario):
     """Get alert information based on scenario"""
@@ -319,6 +367,25 @@ def get_alert_info(scenario):
             "resource": "web-server",
             "duration": "35 minutes",
             "description": "Memory usage sustained above 90%"
+        },
+        # ADD THESE 3 NEW SCENARIOS:
+        "storage_waste": {
+            "severity": "MEDIUM",
+            "resource": "orphaned-disks-pool",
+            "duration": "30 days",
+            "description": "47 unattached disk volumes consuming storage unnecessarily"
+        },
+        "network_anomaly": {
+            "severity": "HIGH", 
+            "resource": "frontend-load-balancer",
+            "duration": "15 minutes",
+            "description": "Traffic spike 400% above normal - potential DDoS attack"
+        },
+        "compliance_violation": {
+            "severity": "CRITICAL",
+            "resource": "customer-database",
+            "duration": "detected now", 
+            "description": "Production database without encryption - GDPR violation risk"
         }
     }
     
@@ -358,6 +425,39 @@ def get_analysis_data(scenario):
                 "Traffic increased beyond instance capacity",
                 "No auto-scaling configured",
                 "Memory-intensive apps not optimized"
+            ]
+        },
+        "storage_waste": {
+            "confidence": 92,
+            "risk": 4,
+            "urgency": "Medium",
+            "root_cause": "Multiple disk volumes remain unattached after VM deletions",
+            "factors": [
+                "No automatic cleanup policies configured",
+                "Manual VM deletion without disk cleanup",
+                "Missing storage lifecycle management"
+            ]
+        },
+        "network_anomaly": {
+            "confidence": 88,
+            "risk": 7,
+            "urgency": "High",
+            "root_cause": "Unusual traffic pattern suggests DDoS attack or viral content",
+            "factors": [
+                "Traffic increased 400% in 15 minutes",
+                "No DDoS protection configured",
+                "Source IPs from suspicious regions"
+            ]
+        },
+        "compliance_violation": {
+            "confidence": 99,
+            "risk": 9,
+            "urgency": "Critical",
+            "root_cause": "Customer database lacks encryption violating GDPR requirements",
+            "factors": [
+                "Database created without encryption",
+                "No compliance monitoring alerts",
+                "Sensitive data at risk of exposure"
             ]
         }
     }
@@ -420,6 +520,71 @@ gcloud compute instances start web-server --zone=us-west1-a""",
                 "Gradual traffic restoration"
             ],
             "rollback": "gcloud compute instances set-machine-type web-server --machine-type=n1-standard-2"
+        },
+        "storage_waste": {
+            "action": "Delete orphaned disk volumes",
+            "time": "3 minutes",
+            "outcome": "$200/month storage savings",
+            "success_rate": 94,
+            "commands": """# List orphaned disks
+gcloud compute disks list --filter="users:( )"
+
+# Delete unattached volumes
+gcloud compute disks delete orphaned-disk-1 orphaned-disk-2 --zone=us-central1-a
+
+# Set up automatic cleanup policy
+gcloud compute resource-policies create disk-lifecycle cleanup-policy""",
+            "safety": [
+                "Verify disks are truly orphaned",
+                "Create snapshots before deletion",
+                "Automatic policy prevents future waste"
+            ],
+            "rollback": "gcloud compute disks snapshot [disk-name] --snapshot-names=recovery-backup"
+        },
+        "network_anomaly": {
+            "action": "Enable DDoS protection",
+            "time": "2 minutes",
+            "outcome": "Traffic normalized, attack blocked",
+            "success_rate": 91,
+            "commands": """# Enable Cloud Armor DDoS protection
+gcloud compute security-policies create ddos-protection
+
+# Apply rate limiting rule
+gcloud compute security-policies rules create 1000 --security-policy=ddos-protection --expression="true" --action="rate-based-ban"
+
+# Apply to load balancer
+gcloud compute backend-services update frontend-service --security-policy=ddos-protection""",
+            "safety": [
+                "Gradual rate limiting implementation",
+                "Whitelist known good IPs",
+                "24/7 monitoring enabled"
+            ],
+            "rollback": "gcloud compute security-policies delete ddos-protection"
+        },
+        "compliance_violation": {
+            "action": "Enable database encryption",
+            "time": "5 minutes",
+            "outcome": "GDPR compliance restored",
+            "success_rate": 96,
+            "commands": """# Create encrypted backup
+gcloud sql backups create --instance=customer-database
+
+# Enable encryption at rest
+gcloud sql instances patch customer-database --storage-auto-increase --database-flags=cloudsql.enable_encryption_at_rest=on
+
+# Verify encryption status
+gcloud sql instances describe customer-database --format="value(settings.storageAutoResize)"
+
+
+
+
+""",
+            "safety": [
+                "Backup created before changes",
+                "Zero-downtime encryption process",
+                "Compliance audit trail maintained"
+            ],
+            "rollback": "gcloud sql backups restore [BACKUP_ID] --restore-instance=customer-database"
         }
     }
     
@@ -453,6 +618,33 @@ def get_impact_data(scenario):
                 "Memory doubled from 8GB to 16GB",
                 "Performance restored to optimal",
                 "Expected 70% reduction in memory pressure"
+            ]
+        },
+        "storage_waste": {
+            "title": "💾 Storage Optimization Complete",
+            "details": [
+                "47 orphaned disk volumes deleted",
+                "Storage cost reduced by $200/month",
+                "Automatic cleanup policy implemented",
+                "Future waste prevention enabled"
+            ]
+        },
+        "network_anomaly": {
+            "title": "🌐 Network Security Enhanced",
+            "details": [
+                "DDoS protection successfully enabled",
+                "Malicious traffic blocked at edge",
+                "Normal traffic flow restored",
+                "24/7 monitoring activated"
+            ]
+        },
+        "compliance_violation": {
+            "title": "⚖️ Compliance Violation Resolved",
+            "details": [
+                "Database encryption enabled successfully",
+                "GDPR compliance requirements met",
+                "Customer data now fully protected",
+                "Audit trail maintained for compliance"
             ]
         }
     }
